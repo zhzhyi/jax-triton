@@ -14,7 +14,7 @@ from jax_triton.pallas.ops import attention as tr_attention
 @benchmark.option.args([128, 16, 2048, 2])
 @benchmark.option.args([128, 32, 2048, 2])
 @benchmark.option.args([128, 32, 2048, 32])
-@benchmark.option.args([128, 32, 2048, 512])
+@benchmark.option.args([128, 32, 2048, 64])
 @benchmark.option.iterations(100)
 def TritonMHA(benchmark_state: benchmark.State):
   k1, k2, k3 = random.split(random.PRNGKey(0), 3)
@@ -43,7 +43,7 @@ def TritonMHA(benchmark_state: benchmark.State):
 @benchmark.option.args([128, 16, 2048, 2])
 @benchmark.option.args([128, 32, 2048, 2])
 @benchmark.option.args([128, 32, 2048, 32])
-@benchmark.option.args([128, 32, 2048, 512])
+@benchmark.option.args([128, 32, 2048, 64])
 @benchmark.option.iterations(100)
 def BaseLiMHA(benchmark_state: benchmark.State):
   k1, k2, k3 = random.split(random.PRNGKey(0), 3)

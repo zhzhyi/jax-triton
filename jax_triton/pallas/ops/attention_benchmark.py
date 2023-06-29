@@ -29,10 +29,10 @@ def TritonMHA(benchmark_state: benchmark.State):
   k = random.normal(k2, (batch_size, seq_len, num_heads, head_dim), dtype=jnp.float16)
   v = random.normal(k3, (batch_size, seq_len, num_heads, head_dim), dtype=jnp.float16)
 
-  tr_attention.mha(q, k, v, causal=False, block_q=128, block_k=64)
+  tr_attention.mha(q, k, v, causal=False, num_stages=1)
 
   while benchmark_state:
-      o_ref = tr_attention.mha(q, k, v, causal=False, block_q=128, block_k=64)
+      o_ref = tr_attention.mha(q, k, v, causal=False, num_stages=1)
 
 
 @benchmark.register

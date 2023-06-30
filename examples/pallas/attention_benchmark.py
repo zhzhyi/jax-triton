@@ -61,7 +61,7 @@ def TritFWD(benchmark_state: benchmark.State):
   k = random.normal(k2, (batch_size, seq_len, num_heads, head_dim), dtype=jnp.float16)
   v = random.normal(k3, (batch_size, seq_len, num_heads, head_dim), dtype=jnp.float16)
 
-  f = partial(attention.mha, num_stages=1)
+  f = jax.jit(partial(attention.mha, num_stages=1))
   o = f(q, k, v).block_until_ready()
 
   while benchmark_state:

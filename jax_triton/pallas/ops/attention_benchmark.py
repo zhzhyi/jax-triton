@@ -1,9 +1,11 @@
 import google_benchmark as benchmark
+import jax
 
 from absl import app
+from functools import partial
 from jax import numpy as jnp
 from jax import random
-from jax_triton.pallas.ops import attention as tr_attention
+from jax_triton.pallas.ops import attention
 
 
 @benchmark.register
@@ -29,10 +31,11 @@ def TritonMHA(benchmark_state: benchmark.State):
   k = random.normal(k2, (batch_size, seq_len, num_heads, head_dim), dtype=jnp.float16)
   v = random.normal(k3, (batch_size, seq_len, num_heads, head_dim), dtype=jnp.float16)
 
-  tr_attention.mha(q, k, v, causal=False, num_stages=1)
+  f = partial(attention.mha, num_stages=1)
+  o = f(q, k, v).block_until_ready()
 
   while benchmark_state:
-      o_ref = tr_attention.mha(q, k, v, causal=False, num_stages=1)
+    o = f(q, k, v).block_until_ready()
 
 
 @benchmark.register
@@ -58,10 +61,12 @@ def BaseLiMHA(benchmark_state: benchmark.State):
   k = random.normal(k2, (batch_size, seq_len, num_heads, head_dim), dtype=jnp.float16)
   v = random.normal(k3, (batch_size, seq_len, num_heads, head_dim), dtype=jnp.float16)
 
-  tr_attention.mha_reference(q, k, v, causal=False)
+  f = jax.jit(attention.mha_reference)
+
+  o = f.(q, k, v).block_until_ready()
 
   while benchmark_state:
-    o_ref = tr_attention.mha_reference(q, k, v, causal=False)
+    o = f.(q, k, v).block_until_ready()
 
 
 if __name__ == "__main__":

@@ -63,10 +63,10 @@ def BaseLiMHA(benchmark_state: benchmark.State):
 
   f = jax.jit(attention.mha_reference)
 
-  o = f.(q, k, v).block_until_ready()
+  o = f(q, k, v).block_until_ready()
 
   while benchmark_state:
-    o = f.(q, k, v).block_until_ready()
+    o = f(q, k, v).block_until_ready()
 
 
 if __name__ == "__main__":

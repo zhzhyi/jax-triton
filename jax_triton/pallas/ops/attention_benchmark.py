@@ -10,8 +10,9 @@ from jax_triton.pallas.ops import attention
 
 @benchmark.register
 @benchmark.option.unit(benchmark.kMillisecond)
-@benchmark.option.args([16, 4, 64, True])
-@benchmark.option.args([128, 2, 2048, 2])
+@benchmark.option.args([16, 4, 64, 1])
+@benchmark.option.args([64, 2, 2048, 2])
+@benchmark.option.args([64, 12, 2048, 2])
 @benchmark.option.args([128, 8, 2048, 2])
 @benchmark.option.args([128, 16, 2048, 2])
 @benchmark.option.args([128, 32, 2048, 2])
@@ -40,7 +41,9 @@ def TritFWD(benchmark_state: benchmark.State):
 
 @benchmark.register
 @benchmark.option.unit(benchmark.kMillisecond)
-@benchmark.option.args([16, 4, 64, True])
+@benchmark.option.args([16, 4, 64, 1])
+@benchmark.option.args([64, 2, 2048, 2])
+@benchmark.option.args([64, 12, 2048, 2])
 @benchmark.option.args([128, 2, 2048, 2])
 @benchmark.option.args([128, 8, 2048, 2])
 @benchmark.option.args([128, 16, 2048, 2])
@@ -71,13 +74,9 @@ def BaseFWD(benchmark_state: benchmark.State):
 
 @benchmark.register
 @benchmark.option.unit(benchmark.kMillisecond)
-@benchmark.option.args([16, 4, 64, True])
-@benchmark.option.args([128, 2, 2048, 2])
-@benchmark.option.args([128, 8, 2048, 2])
-@benchmark.option.args([128, 16, 2048, 2])
-@benchmark.option.args([128, 32, 2048, 2])
-@benchmark.option.args([128, 32, 2048, 32])
-@benchmark.option.args([128, 32, 2048, 64])
+@benchmark.option.args([16, 4, 64, 1])
+@benchmark.option.args([64, 2, 2048, 2])
+@benchmark.option.args([64, 12, 2048, 2])
 @benchmark.option.iterations(100)
 def TritBWD(benchmark_state: benchmark.State):
   k1, k2, k3 = random.split(random.PRNGKey(0), 3)
@@ -104,13 +103,9 @@ def TritBWD(benchmark_state: benchmark.State):
 
 @benchmark.register
 @benchmark.option.unit(benchmark.kMillisecond)
-@benchmark.option.args([16, 4, 64, True])
-@benchmark.option.args([128, 2, 2048, 2])
-@benchmark.option.args([128, 8, 2048, 2])
-@benchmark.option.args([128, 16, 2048, 2])
-@benchmark.option.args([128, 32, 2048, 2])
-@benchmark.option.args([128, 32, 2048, 32])
-# @benchmark.option.args([128, 32, 2048, 64]) OOM
+@benchmark.option.args([16, 4, 64, 1])
+@benchmark.option.args([64, 2, 2048, 2])
+@benchmark.option.args([64, 12, 2048, 2])
 @benchmark.option.iterations(100)
 def BaseBWD(benchmark_state: benchmark.State):
   k1, k2, k3 = random.split(random.PRNGKey(0), 3)

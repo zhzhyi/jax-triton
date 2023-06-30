@@ -124,10 +124,12 @@ def TritBWD(benchmark_state: benchmark.State):
   def f(q, k, v):
     return attention.mha(q, k, v).sum()
 
-  dq, dk, dv = jax.grad(f, argnums=(0, 1, 2))(q, k, v)
+  f_grad = jax.jit(jax.grad(f, argnums=(0, 1, 2)))
+
+  dq, dk, dv = f_grad(q, k, v)
 
   while benchmark_state:
-    dq, dk, dv = jax.grad(f, argnums=(0, 1, 2))(q, k, v)
+    dq, dk, dv = f_grad(q, k, v)
 
 
 @benchmark.register
@@ -153,10 +155,12 @@ def BaseBWD(benchmark_state: benchmark.State):
   def f_ref(q, k, v):
     return attention.mha_reference(q, k, v).sum()
 
-  dq_ref, dk_ref, dv_ref = jax.grad(f_ref, argnums=(0, 1, 2))(q, k, v)
+  f_grad = jax.jit(jax.grad(f_ref, argnums=(0, 1, 2)))
+
+  dq_ref, dk_ref, dv_ref = f_grad(q, k, v)
 
   while benchmark_state:
-    dq_ref, dk_ref, dv_ref = jax.grad(f_ref, argnums=(0, 1, 2))(q, k, v)
+    dq_ref, dk_ref, dv_ref = f_grad(q, k, v)
 
 
 if __name__ == "__main__":

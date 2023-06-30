@@ -4,28 +4,28 @@ Results on 1 A100
 --------------------------------------------------------------------------------
 Benchmark                                      Time             CPU   Iterations
 --------------------------------------------------------------------------------
-TritFWD/16/4/64/1/iterations:100           0.373 ms        0.373 ms          100
-TritFWD/64/2/2048/2/iterations:100         0.477 ms        0.415 ms          100
-TritFWD/64/12/2048/2/iterations:100        0.710 ms        0.453 ms          100
-TritFWD/128/8/2048/2/iterations:100        0.831 ms        0.409 ms          100
-TritFWD/128/16/2048/2/iterations:100        1.46 ms        0.750 ms          100
-TritFWD/128/32/2048/2/iterations:100        2.09 ms        0.583 ms          100
-TritFWD/128/32/2048/32/iterations:100       19.8 ms        0.733 ms          100
-TritFWD/128/32/2048/64/iterations:100       38.6 ms        0.720 ms          100
-BaseFWD/16/4/64/1/iterations:100           0.071 ms        0.069 ms          100
-BaseFWD/64/2/2048/2/iterations:100         0.550 ms        0.087 ms          100
-BaseFWD/64/12/2048/2/iterations:100         1.60 ms        0.148 ms          100
-BaseFWD/128/2/2048/2/iterations:100        0.437 ms        0.138 ms          100
-BaseFWD/128/8/2048/2/iterations:100         1.05 ms        0.106 ms          100
-BaseFWD/128/16/2048/2/iterations:100        1.95 ms        0.287 ms          100
-BaseFWD/128/32/2048/2/iterations:100        3.35 ms        0.263 ms          100
-BaseFWD/128/32/2048/32/iterations:100       44.9 ms        0.338 ms          100
-TritBWD/16/4/64/1/iterations:100            1.78 ms         1.78 ms          100
-TritBWD/64/2/2048/2/iterations:100          3.20 ms         1.95 ms          100
-TritBWD/64/12/2048/2/iterations:100         4.05 ms         1.97 ms          100
-BaseBWD/16/4/64/1/iterations:100            1.97 ms         1.97 ms          100
-BaseBWD/64/2/2048/2/iterations:100          1.93 ms         1.93 ms          100
-BaseBWD/64/12/2048/2/iterations:100         2.81 ms         2.12 ms          100
+TritFWD/16/4/64/1/iterations:100           0.033 ms        0.033 ms          100
+TritFWD/64/2/2048/2/iterations:100         0.191 ms        0.044 ms          100
+TritFWD/64/12/2048/2/iterations:100        0.354 ms        0.045 ms          100
+TritFWD/128/8/2048/2/iterations:100        0.492 ms        0.052 ms          100
+TritFWD/128/16/2048/2/iterations:100       0.853 ms        0.065 ms          100
+TritFWD/128/32/2048/2/iterations:100        1.68 ms        0.204 ms          100
+TritFWD/128/32/2048/32/iterations:100       19.3 ms        0.196 ms          100
+TritFWD/128/32/2048/64/iterations:100       38.2 ms        0.259 ms          100
+BaseFWD/16/4/64/1/iterations:100           0.074 ms        0.072 ms          100
+BaseFWD/64/2/2048/2/iterations:100         0.460 ms        0.116 ms          100
+BaseFWD/64/12/2048/2/iterations:100         1.40 ms        0.250 ms          100
+BaseFWD/128/2/2048/2/iterations:100        0.410 ms        0.145 ms          100
+BaseFWD/128/8/2048/2/iterations:100         1.07 ms        0.154 ms          100
+BaseFWD/128/16/2048/2/iterations:100        1.98 ms        0.280 ms          100
+BaseFWD/128/32/2048/2/iterations:100        3.51 ms        0.355 ms          100
+BaseFWD/128/32/2048/32/iterations:100       44.9 ms        0.326 ms          100
+TritBWD/16/4/64/1/iterations:100           0.066 ms        0.066 ms          100
+TritBWD/64/2/2048/2/iterations:100          2.58 ms        0.193 ms          100
+TritBWD/64/12/2048/2/iterations:100         3.29 ms        0.191 ms          100
+BaseBWD/16/4/64/1/iterations:100           0.101 ms        0.101 ms          100
+BaseBWD/64/2/2048/2/iterations:100         0.335 ms        0.163 ms          100
+BaseBWD/64/12/2048/2/iterations:100         1.52 ms        0.252 ms          100
 '''
 import google_benchmark as benchmark
 import jax

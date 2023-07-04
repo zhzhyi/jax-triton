@@ -268,7 +268,7 @@ def mha_backward_kernel(
     *, sm_scale: float, causal: bool, has_bias: bool,
     block_q: int, block_d: int, block_k: int
 ):
-  del out_ref, m_ref  # Not needed
+  del out_ref  # Not needed
   seq_len = q_ref.shape[0]
 
   def outer_loop(start_k, _):
@@ -293,9 +293,9 @@ def mha_backward_kernel(
       if causal:
         span_q = start_q * block_q + jnp.arange(block_q)
         qk = jnp.where(span_q[:, None] >= span_k[None, :], qk, float('-inf'))
-      # m = pl.load(m_ref, (pl.ds(start_q * block_q, block_q),))
+      m = pl.load(m_ref, (pl.ds(start_q * block_q, block_q),))
       l = pl.load(l_ref, (pl.ds(start_q * block_q, block_q),))
-      p = jnp.exp(qk - l[:, None])
+      p = jnp.exp(qk - l[:, None] - m[:, None])
       do = pl.load(do_scaled_ref, (pl.ds(start_q * block_q, block_q), slice(None)))
       dv = dv + pl.dot(p.astype(do.dtype).T, do)
       di = pl.load(delta_ref, (pl.ds(start_q * block_q, block_q),))

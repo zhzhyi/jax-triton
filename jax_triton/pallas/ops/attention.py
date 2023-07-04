@@ -98,7 +98,7 @@ def mha_forward_kernel(
 
   if residual_refs:
     l_ref, m_ref = residual_refs
-    l_i += m_i
+    # l_i += m_i
     pl.store(l_ref, (pl.ds(start_q * block_q, block_q),), l_i)
     pl.store(m_ref, (pl.ds(start_q * block_q, block_q),), m_i)
 

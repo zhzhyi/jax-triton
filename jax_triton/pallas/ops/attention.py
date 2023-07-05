@@ -54,7 +54,7 @@ def mha_forward_kernel(
 
     k = pl.load(k_ref, (pl.dslice(start_k * block_k, block_k), slice(None)))
     qk = jnp.zeros([block_q, block_k], dtype=jnp.float32)
-    qk += pl.dot(q, k.T)   # [block_q, block_k]
+    qk += pl.dot(q, k.T, allow_tf32=True)   # [block_q, block_k]
 
     # are these really needed?
     # qk = qk.astype(q_ref.dtype)
@@ -289,7 +289,7 @@ def mha_backward_kernel(
     def inner_loop(start_q, carry):
       dv, dk = carry
       q = pl.load(q_ref, (pl.ds(start_q * block_q, block_q), slice(None)))
-      qk = pl.dot(q, k.T)
+      qk = pl.dot(q, k.T, allow_tf32=True)
 
       # are these really needed?
       # qk = qk.astype(q_ref.dtype)

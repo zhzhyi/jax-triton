@@ -75,10 +75,10 @@ def mha_forward_kernel(
     acc *= jnp.exp(m_prev - m_curr)[:, None]
 
     p = jnp.exp(qk - m_curr[:, None])
-    l_prev += m_prev - m_curr
+    l_prev -= m_curr
     l_prev = jnp.exp(l_prev)
     l_prev += jnp.sum(p, axis=1)
-    l_prev = jnp.log(l_prev)
+    l_prev = jnp.log(l_prev) + m_prev
 
     # l_rcp = 1. / l_curr
     # p = p * l_rcp[:, None]
@@ -103,7 +103,7 @@ def mha_forward_kernel(
     pl.store(m_ref, (pl.ds(start_q * block_q, block_q),), m_i)
 
   # Write output to dram.
-  acc *= jnp.exp(jnp.negative(l_i))[:, None]
+  acc *= jnp.exp(m_i - l_i)[:, None]
   acc = acc.astype(o_ref.dtype)
   pl.store(o_ref, (pl.dslice(start_q * block_q, block_q), pl.dslice(None)), acc)
 
@@ -268,7 +268,7 @@ def mha_backward_kernel(
     *, sm_scale: float, causal: bool, has_bias: bool,
     block_q: int, block_d: int, block_k: int
 ):
-  del out_ref  # Not needed
+  del out_ref, m_ref  # Not needed
   seq_len = q_ref.shape[0]
 
   def outer_loop(start_k, _):
@@ -293,9 +293,9 @@ def mha_backward_kernel(
       if causal:
         span_q = start_q * block_q + jnp.arange(block_q)
         qk = jnp.where(span_q[:, None] >= span_k[None, :], qk, float('-inf'))
-      m = pl.load(m_ref, (pl.ds(start_q * block_q, block_q),))
+      # m = pl.load(m_ref, (pl.ds(start_q * block_q, block_q),))
       l = pl.load(l_ref, (pl.ds(start_q * block_q, block_q),))
-      p = jnp.exp(qk - l[:, None] - m[:, None])
+      p = jnp.exp(qk - l[:, None])
       do = pl.load(do_scaled_ref, (pl.ds(start_q * block_q, block_q), slice(None)))
       dv = dv + pl.dot(p.astype(do.dtype).T, do)
       di = pl.load(delta_ref, (pl.ds(start_q * block_q, block_q),))

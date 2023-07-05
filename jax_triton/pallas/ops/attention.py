@@ -59,6 +59,9 @@ def mha_forward_kernel(
     if sm_scale != 1.:
       qk *= sm_scale # [block_q, block_k]
 
+    qk = qk.astype(q_ref.dtype)
+    qk = qk.astype(jnp.float32)
+
     # Load bias.
     # bias in the shape of [block_q, block_k]
     if has_bias:
@@ -292,6 +295,9 @@ def mha_backward_kernel(
 
       if sm_scale != 1.0:
         qk *= sm_scale
+
+      qk = qk.astype(q_ref.dtype)
+      qk = qk.astype(jnp.float32)
 
       if has_bias:
           bias = pl.load(bias_ref, (pl.dslice(start_q * block_q, block_q), pl.dslice(start_k * block_k, block_k))).astype(jnp.float32)

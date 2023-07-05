@@ -105,6 +105,7 @@ def BaseFWD(benchmark_state: benchmark.State):
 @benchmark.option.unit(benchmark.kMillisecond)
 @benchmark.option.args([16, 4, 64, 1])
 @benchmark.option.args([64, 2, 2048, 2])
+@benchmark.option.args([128, 2, 2048, 2])
 @benchmark.option.args([64, 12, 2048, 2])
 @benchmark.option.iterations(100)
 def TritBWD(benchmark_state: benchmark.State):
@@ -136,6 +137,7 @@ def TritBWD(benchmark_state: benchmark.State):
 @benchmark.option.unit(benchmark.kMillisecond)
 @benchmark.option.args([16, 4, 64, 1])
 @benchmark.option.args([64, 2, 2048, 2])
+@benchmark.option.args([128, 2, 2048, 2])
 @benchmark.option.args([64, 12, 2048, 2])
 @benchmark.option.iterations(100)
 def BaseBWD(benchmark_state: benchmark.State):

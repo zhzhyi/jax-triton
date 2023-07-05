@@ -56,6 +56,10 @@ def mha_forward_kernel(
     qk = jnp.zeros([block_q, block_k], dtype=jnp.float32)
     qk += pl.dot(q, k.T)   # [block_q, block_k]
 
+    # test precision
+    qk = qk.astype(q_ref.dtype)
+    qk = qk.astype(jnp.float32)
+
 
     if sm_scale != 1.:
       qk *= sm_scale # [block_q, block_k]
@@ -63,19 +67,15 @@ def mha_forward_kernel(
     # Load bias.
     # bias in the shape of [block_q, block_k]
     if has_bias:
-        bias = pl.load(bias_ref, (pl.dslice(start_q * block_q, block_q), pl.dslice(start_k * block_k, block_k))).astype(jnp.float32)
+        bias = pl.load(bias_ref, (pl.dslice(start_q * block_q, block_q), pl.dslice(start_k * block_k, block_k)))
+        qk = qk.astype(bias.dtype)
         qk += bias
-        qk = qk.astype(q_ref.dtype)
         qk = qk.astype(jnp.float32)
 
     if causal:
       span_q = start_q * block_q + jnp.arange(block_q)
       span_k = start_k * block_k + jnp.arange(block_k)
       qk = jnp.where(span_q[:, None] >= span_k[None, :], qk, float('-inf'))
-
-    # test precision
-    qk = qk.astype(q_ref.dtype)
-    qk = qk.astype(jnp.float32)
 
     m_curr = jnp.maximum(jnp.max(qk, axis=1), m_prev)
 
@@ -302,10 +302,11 @@ def mha_backward_kernel(
         qk *= sm_scale
 
       if has_bias:
-          bias = pl.load(bias_ref, (pl.dslice(start_q * block_q, block_q), pl.dslice(start_k * block_k, block_k))).astype(jnp.float32)
+          bias = pl.load(bias_ref, (pl.dslice(start_q * block_q, block_q), pl.dslice(start_k * block_k, block_k)))
+          qk = qk.astype(bias.dtype)
           qk += bias
-          qk = qk.astype(q_ref.dtype)
           qk = qk.astype(jnp.float32)
+
 
       if causal:
         span_q = start_q * block_q + jnp.arange(block_q)

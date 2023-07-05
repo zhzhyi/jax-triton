@@ -71,6 +71,10 @@ def mha_forward_kernel(
       span_k = start_k * block_k + jnp.arange(block_k)
       qk = jnp.where(span_q[:, None] >= span_k[None, :], qk, float('-inf'))
 
+    # test precision
+    qk = qk.astype(q_ref.dtype)
+    qk = qk.astype(jnp.float32)
+
     m_curr = jnp.maximum(jnp.max(qk, axis=1), m_prev)
 
     # test the trick in triton implementation

@@ -410,4 +410,4 @@ def mha_reference(q, k, v, bias=None, sm_scale=1.0, causal: bool=False, has_bias
     weights = jax.nn.softmax(logits * sm_scale + bias.astype(logits.dtype))
   else:
     weights = jax.nn.softmax(logits * sm_scale)
-  return jnp.einsum('bhqk,bkhc->bqhc', weights, v)
+  return jnp.einsum('bhqk,bkhc->bqhc', weights, v.astype(weights.dtype))

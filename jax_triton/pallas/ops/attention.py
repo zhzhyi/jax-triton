@@ -74,7 +74,7 @@ def mha_forward_kernel(
     m_curr = jnp.maximum(jnp.max(qk, axis=1), m_prev)
 
     # test the trick in triton implementation
-    m_curr = jnp.maximum(m_curr, l_prev)
+    # m_curr = jnp.maximum(m_curr, l_prev)
 
     acc *= jnp.exp(m_prev - m_curr)[:, None]
 

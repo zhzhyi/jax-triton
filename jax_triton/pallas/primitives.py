@@ -509,4 +509,4 @@ def dot(a, b, trans_a: bool = False, trans_b: bool = False,
   return jax.lax.dot_general(
       a, b, dimension_numbers=(((lhs_contract_dim,), (rhs_contract_dim,)), ((), ())),
       precision=precision,
-      preferred_element_type=None).astype(jnp.float32)
+      preferred_element_type=None).astype(a.dtype).astype(jnp.float32)

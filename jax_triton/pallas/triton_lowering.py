@@ -975,7 +975,7 @@ def _dot_general_lowering(
   allow_tf32 = (
       precision == lax.Precision.HIGH or precision == lax.Precision.DEFAULT
   )
-  return tl.dot(a, b, _builder=ctx.builder, allow_tf32=allow_tf32, out_dtype=tl.float16)
+  return tl.dot(a, b, _builder=ctx.builder, allow_tf32=allow_tf32, out_dtype=tl.float32)
 
 
 triton_lowering_rules[lax.dot_general_p] = _dot_general_lowering

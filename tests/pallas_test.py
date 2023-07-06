@@ -1448,6 +1448,7 @@ class FusedAttentionTest(parameterized.TestCase):
       (f"{batch_size=}_{seq_len=}_{num_heads=}_{head_dim=}_{causal=}",
        batch_size, seq_len, num_heads, head_dim, causal)
       for batch_size, seq_len, num_heads, head_dim, causal in [
+          (16, 2048, 4, 16, False),
           (1, 384, 1, 32, False),
           (2, 384, 2, 32, False),
           (1, 384, 1, 32, True),

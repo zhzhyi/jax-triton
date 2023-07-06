@@ -410,7 +410,7 @@ mha.defvjp(_mha_forward, _mha_backward)
 def mha_reference(q, k, v, bias=None, sm_scale=1.0, causal: bool=False, has_bias: bool=False):
   q_seq_len = q.shape[1]
   kv_seq_len = k.shape[1]
-  logits = jnp.einsum('bqhc,bkhc->bhqk', q, k).astype(jnp.float32)
+  logits = jnp.einsum('bqhc,bkhc->bhqk', q, k, precision="float32").astype(jnp.float32)
   if causal:
     mask = jnp.tril(jnp.ones((1, 1, q_seq_len, kv_seq_len), dtype=bool))
     mask = jnp.broadcast_to(mask, logits.shape)
@@ -419,4 +419,4 @@ def mha_reference(q, k, v, bias=None, sm_scale=1.0, causal: bool=False, has_bias
     weights = jax.nn.softmax(logits * sm_scale + bias.astype(logits.dtype)).astype(v.dtype)
   else:
     weights = jax.nn.softmax(logits * sm_scale).astype(v.dtype)
-  return jnp.einsum('bhqk,bkhc->bqhc', weights, v)
+  return jnp.einsum('bhqk,bkhc->bqhc', weights, v, precision="float32")
